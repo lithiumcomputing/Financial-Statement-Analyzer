@@ -433,7 +433,15 @@ Formula: Working Captial / Total Liabilities
 @return Working Capital to Debt Ratio table as a DataFrame object.
 """
 def calculateWCToDebtRatio(balSht, dates):
-    pass
+    tl = pd.to_numeric(balSht["Total Liabilities"])
+    wc = calculateWorkingCapital(balSht, dates)
+    wc_series = wc["Working Capital (WC)"]
+    wc_series.index = tl.index
+    
+    ratioAsSeries = wc_series/tl
+    
+    return pd.DataFrame(ratioAsSeries.values, index=dates,\
+                        columns=["WC to Debt Ratio"])
     
 # Report-generating Functions
 
@@ -483,7 +491,8 @@ def getSolvencyRatios(balSht, incStmt, cfStmt, dates):
      calculateDebtToEquityRatio(balSht, dates),
      calculateDebtToIncomeRatio(balSht, incStmt, dates),
      calculateDebtServiceCoverageRatio(balSht, incStmt, dates),
-     calculateCashFlowToDebtRatio(balSht, cfStmt, dates)]
+     calculateCashFlowToDebtRatio(balSht, cfStmt, dates),
+     calculateWCToDebtRatio(balSht, dates)]
     
     table = listOfRatioTables[0]
 
