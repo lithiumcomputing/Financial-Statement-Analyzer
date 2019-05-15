@@ -52,6 +52,14 @@ class FinancialData (object):
         # Income Statement Values
         self.__sales = pd.to_numeric(incStmt["Total Revenue"])
         self.__gp = pd.to_numeric(incStmt["Gross Profit"])
+        self.__noil = pd.to_numeric(incStmt["Operating Income or Loss"])
+        self.__ie = pd.to_numeric(incStmt["Interest Expense"])
+        self.__ebit = pd.to_numeric(\
+                        incStmt["Earnings Before Interest and Taxes"])
+        
+        # Cash Flow Statement Values
+        self.__ocf = pd.to_numeric(cfStmt\
+                       ["Total Cash Flow From Operating Activities"])
         
     
     ##
@@ -157,6 +165,46 @@ class FinancialData (object):
     # @return Value of gross profit.
     def getGrossProfit(self):
         return self.__gp
+    
+    ##
+    # Retrieves operating income/loss value.
+    #
+    # @param self A reference to this object.
+    # @return Value of operating income/loss.
+    def getOperatingIncomeOrLoss(self):
+        return self.__noil
+    
+    ##
+    # Alias function for getOperating.IncomeOrLoss()
+    #
+    # @param self A reference to this object.
+    # @return Value of operating income/loss.
+    def getNetOperatingIncomeOrLoss(self):
+        return self.getOperatingIncomeOrLoss()
+    
+    ##
+    # Retrieves interest expense value.
+    #
+    # @param self A reference to this object.
+    # @return Value of interest expense. (Negative Value)
+    def getInterestExpense(self):
+        return self.__ie
+    
+    ##
+    # Retrieves operating cash flows.
+    #
+    # @param self A reference to this object.
+    # @return Value of operating cash flows.
+    def getOperatingCashFlows(self):
+        return self.__ocf
+    
+    ##
+    # Retrieves earnings before interest and tax.
+    #
+    # @param self A reference to this object.
+    # @return Value of earnings before interest and tax.
+    def getEBIT(self):
+        return self.__ebit
 
 # Functions
 
@@ -530,8 +578,9 @@ def calculateDebtToIncomeRatio(balSht, incStmt, dates):
 #
 # @return Debt Service Coverage Ratio table as a DataFrame object.
 def calculateDebtServiceCoverageRatio(balSht, incStmt, dates):
-    noi = pd.to_numeric(incStmt["Operating Income or Loss"])
-    ie = np.abs(pd.to_numeric(incStmt["Interest Expense"]))
+    global financialData
+    noi = financialData.getOperatingIncomeOrLoss()
+    ie = financialData.getInterestExpense()
     
     ratioAsSeries = noi/ie
     
@@ -548,8 +597,9 @@ def calculateDebtServiceCoverageRatio(balSht, incStmt, dates):
 #
 # @return Cash Flow To Debt Ratio table as a DataFrame object.    
 def calculateCashFlowToDebtRatio(balSht, cfStmt, dates):
-    ocf = pd.to_numeric(cfStmt["Total Cash Flow From Operating Activities"])
-    tl = pd.to_numeric(balSht["Total Liabilities"])
+    global financialData
+    ocf = financialData.getOperatingCashFlows()
+    tl = financialData.getTotalLiabilities()
     
     ratioAsSeries = ocf/tl
     
@@ -566,7 +616,8 @@ def calculateCashFlowToDebtRatio(balSht, cfStmt, dates):
 #
 # @return Working Capital to Debt Ratio table as a DataFrame object.
 def calculateWCToDebtRatio(balSht, dates):
-    tl = pd.to_numeric(balSht["Total Liabilities"])
+    global financialData
+    tl = financialData.getTotalLiabilities()
     wc = calculateWorkingCapital(balSht, dates)
     wc_series = wc["Working Capital (WC)"]
     wc_series.index = tl.index
@@ -585,8 +636,9 @@ def calculateWCToDebtRatio(balSht, dates):
 #
 # @return Working Capital to Debt Ratio table as a DataFrame object.   
 def calculateTimesInterestEarned(incStmt, dates):
-    ebit = pd.to_numeric(incStmt["Earnings Before Interest and Taxes"])
-    ie = np.abs(pd.to_numeric(incStmt["Interest Expense"]))
+    global financialData
+    ebit = financialData.getEBIT()
+    ie = np.abs(financialData.getInterestExpense())
     
     ratioAsSeries = ebit/ie
     
