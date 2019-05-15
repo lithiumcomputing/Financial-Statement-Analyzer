@@ -20,11 +20,143 @@ import requests
 import pandas as pd
 import numpy as np
 
-class FinancialData (object):
-    pass
-
 # Constants
 ROUNDING_PRECISION = 3
+
+##
+# Stores financial data from financial statements in one
+# convenient place.
+class FinancialData (object):
+    ##
+    # Initializes the financial data class by collecting data
+    # from specified financial statements.
+    #
+    # @param self A reference to this object.
+    # @param balSht Balance Sheet DataFrame. 
+    # @param incStmt Income Statement DataFrame.
+    # @param cfStmt Cash Flow Statement DataFrame.
+    # @param stkQte Stock Quote DataFrame.
+    # @param dates Dates from the above financial statements.
+    def __init__ (self, balSht, incStmt, cfStmt, stkQte, dates):
+        # Balance Sheet Values
+        self.__cce = pd.to_numeric(balSht["Cash And Cash Equivalents"])
+        self.__currLia = pd.to_numeric(balSht["Total Current Liabilities"])
+        self.__currAssets = pd.to_numeric(balSht["Total Current Assets"])
+        self.__shortTermInv = pd.to_numeric(balSht["Short Term Investments"])
+        self.__NR = pd.to_numeric(balSht["Net Receivables"])
+        self.__inventory = pd.to_numeric(balSht["Inventory"])
+        self.__totalAssets = pd.to_numeric(balSht["Total Assets"])
+        self.__totalLia = pd.to_numeric(balSht["Total Liabilities"])
+        self.__totalSE = pd.to_numeric(balSht["Total Stockholder Equity"])
+        
+        # Income Statement Values
+        self.__sales = pd.to_numeric(incStmt["Total Revenue"])
+        self.__gp = pd.to_numeric(incStmt["Gross Profit"])
+        
+    
+    ##
+    # Retrieves cash and cash equivalents value.
+    #
+    # @param self A reference to this object.
+    # @return Value of Cash and cash equivalents.
+    def getCashAndCashEquivalents (self):
+        return self.__cce
+    
+    ##
+    # Retrieves the current liabilities value.
+    #
+    # @param self A reference to this object.
+    # @return Value of Current Liabilities.
+    def getCurrentLiabilities (self):
+        return self.__currLia
+    
+    ##
+    # Retrieves the current liabilities value.
+    #
+    # @param self A reference to this object.
+    # @return Value of Current Assets.
+    def getCurrentAssets (self):
+        return self.__currAssets
+    
+    ##
+    # Retrieves short term investments value.
+    #
+    # @param self A reference to this object.
+    # @return Value of short term investments.
+    def getShortTermInvestments(self):
+        return self.__shortTermInv
+    
+    ##
+    # Retrieves net receivables value.
+    #
+    # @param self A reference to this object.
+    # @return Value of net receivables.
+    def getNetReceivables(self):
+        return self.__NR
+    
+    ##
+    # Retrieves inventory value.
+    #
+    # @param self A reference to this object.
+    # @return Value of inventory.
+    def getInventory(self):
+        return self.__inventory
+    
+    ##
+    # Retrieves total assets value.
+    #
+    # @param self A reference to this object.
+    # @return Value of total assets.
+    def getTotalAssets(self):
+        return self.__totalAssets
+    
+    ##
+    # Retrieves total liabilities value.
+    #
+    # @param self A reference to this object.
+    # @return Value of total liabilities.
+    def getTotalLiabilities(self):
+        return self.__totalLia
+    
+    ##
+    # Retrieves total stockholder's equity value.
+    #
+    # @param self A reference to this object.
+    # @return Value of total stockholder's equity.
+    def getTotalStockholderEquity(self):
+        return self.__totalSE
+    
+    ##
+    # Alias function for getTotalStockholderEquity().
+    #
+    # @param self A reference to this object.
+    # @return Value of total shareholder's equity.
+    def getTotalShareholderEquity(self):
+        return self.getTotalStockholderEquity();
+    
+    ##
+    # Retrieves sales amount.
+    #
+    # @param self A reference to this object.
+    # @return Value of sales.
+    def getSales(self):
+        return self.__sales
+    
+    ##
+    # Alias function for getSales().
+    #
+    # @param self A reference to this object.
+    # @return Value of total shareholder's equity.
+    def getTotalRevenue(self):
+        return self.getSales();
+    
+    ##
+    # Retrieves gross profit value.
+    #
+    # @param self A reference to this object.
+    # @return Value of gross profit.
+    def getGrossProfit(self):
+        return self.__gp
 
 # Functions
 
@@ -152,8 +284,9 @@ def calculateWACC(balSht, incStmt, stkQte):
 # @return Cash Ratio table as a DataFrame object.
 #
 def calculateCashRatio (balSht, dates):
-    cce = pd.to_numeric(balSht["Cash And Cash Equivalents"])
-    currLia = pd.to_numeric(balSht["Total Current Liabilities"])
+    global financialData
+    cce = financialData.getCashAndCashEquivalents()
+    currLia = financialData.getCurrentLiabilities()
     
     ratioAsSeries = cce/currLia
     
@@ -172,11 +305,12 @@ def calculateCashRatio (balSht, dates):
 #
 # @return Quick Ratio table as a DataFrame object.
 def calculateQuickRatio (balSht, dates):
-    cce = pd.to_numeric(balSht["Cash And Cash Equivalents"])
-    si = pd.to_numeric(balSht["Short Term Investments"])
-    nr = pd.to_numeric(balSht["Net Receivables"])
+    global financialData
+    cce = financialData.getCashAndCashEquivalents()
+    si = financialData.getShortTermInvestments()
+    nr = financialData.getNetReceivables()
     qa = cce + si + nr
-    currLia = pd.to_numeric(balSht["Total Current Liabilities"])
+    currLia = financialData.getCurrentLiabilities()
     
     ratioAsSeries = qa/currLia
     
@@ -193,8 +327,9 @@ def calculateQuickRatio (balSht, dates):
 #
 # @return Current Ratio table as a DataFrame object.
 def calculateCurrentRatio (balSht, dates):
-    currAssets = pd.to_numeric(balSht["Total Current Assets"])
-    currLia = pd.to_numeric(balSht["Total Current Liabilities"])
+    global financialData
+    currAssets = financialData.getCurrentAssets()
+    currLia = financialData.getCurrentLiabilities()
     
     ratioAsSeries = currAssets/currLia
     
@@ -210,8 +345,9 @@ def calculateCurrentRatio (balSht, dates):
 #
 # @return Working Capital table as a DataFrame object.   
 def calculateWorkingCapital(balSht, dates):
-    currAssets = pd.to_numeric(balSht["Total Current Assets"])
-    currLia = pd.to_numeric(balSht["Total Current Liabilities"])
+    global financialData
+    currAssets = financialData.getCurrentAssets()
+    currLia = financialData.getCurrentLiabilities()
     
     # Since all numbers are in thousands, we multiply
     # current assets and liabilities each by 1000.
@@ -230,7 +366,8 @@ def calculateWorkingCapital(balSht, dates):
 # @return Cash To WC Ratio table as a DataFrame object.
 #    
 def calculateCashToWorkingCapitalRatio(balSht, dates):
-    cce = pd.to_numeric(balSht["Cash And Cash Equivalents"])
+    global financialData
+    cce = financialData.getCashAndCashEquivalents()
     wc = calculateWorkingCapital(balSht, dates)
     wc_series = wc["Working Capital (WC)"]
     wc_series.index = cce.index
@@ -250,7 +387,8 @@ def calculateCashToWorkingCapitalRatio(balSht, dates):
 #
 # @return Inventory To WC Ratio table as a DataFrame object.   
 def calculateInventoryToWorkingCapitalRatio(balSht, dates):
-    inventory = pd.to_numeric(balSht["Inventory"])
+    global financialData
+    inventory = financialData.getInventory()
     wc = calculateWorkingCapital(balSht, dates)
     wc_series = wc["Working Capital (WC)"]
     wc_series.index = inventory.index
@@ -271,7 +409,8 @@ def calculateInventoryToWorkingCapitalRatio(balSht, dates):
 #
 # @return Sales To WC Ratio table as a DataFrame object.   
 def salesToWorkingCapitalRatio(balSht, incStmt, dates):
-    sales = pd.to_numeric(incStmt["Total Revenue"])
+    global financialData
+    sales = financialData.getSales()
     wc = calculateWorkingCapital(balSht, dates)
     wc_series = wc["Working Capital (WC)"]
     wc_series.index = sales.index
@@ -292,8 +431,9 @@ def salesToWorkingCapitalRatio(balSht, incStmt, dates):
 #
 # @return Sales To Current Assets table as a DataFrame object. 
 def salesToCurrentAssetsRatio(balSht, incStmt, dates):
-    sales = pd.to_numeric(incStmt["Total Revenue"])
-    ca = pd.to_numeric(balSht["Total Current Assets"])
+    global financialData
+    sales = financialData.getSales()
+    ca = financialData.getCurrentAssets()
     
     ratioAsSeries = sales/ca
     
@@ -312,8 +452,9 @@ def salesToCurrentAssetsRatio(balSht, incStmt, dates):
 #
 # @return Debt Ratio table as a DataFrame object.
 def calculateDebtRatio(balSht, dates):
-    tl = pd.to_numeric(balSht["Total Liabilities"])
-    ta = pd.to_numeric(balSht["Total Assets"])
+    global financialData
+    tl = financialData.getTotalLiabilities()
+    ta = financialData.getTotalAssets()
     
     ratioAsSeries = tl/ta
     
@@ -329,8 +470,9 @@ def calculateDebtRatio(balSht, dates):
 #
 # @return Equity Ratio table as a DataFrame object.  
 def calculateEquityRatio(balSht, dates):
-    te = pd.to_numeric(balSht["Total Stockholder Equity"])
-    ta = pd.to_numeric(balSht["Total Assets"])
+    global financialData
+    te = financialData.getTotalStockholderEquity()
+    ta = financialData.getTotalAssets()
     
     ratioAsSeries = te/ta
     
@@ -347,8 +489,9 @@ def calculateEquityRatio(balSht, dates):
 #
 # @return Debt to Equity Ratio table as a DataFrame object.  
 def calculateDebtToEquityRatio(balSht, dates):
-    te = pd.to_numeric(balSht["Total Stockholder Equity"])
-    tl = pd.to_numeric(balSht["Total Liabilities"])
+    global financialData
+    te = financialData.getTotalStockholderEquity()
+    tl = financialData.getTotalLiabilities()
     ratioAsSeries = tl/te
     
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
@@ -365,8 +508,9 @@ def calculateDebtToEquityRatio(balSht, dates):
 #
 # @return Debt to Equity Ratio table as a DataFrame object.   
 def calculateDebtToIncomeRatio(balSht, incStmt, dates):
-    tl = pd.to_numeric(balSht["Total Liabilities"])
-    gp = pd.to_numeric(incStmt["Gross Profit"])
+    global financialData
+    tl = financialData.getTotalLiabilities()
+    gp = financialData.getGrossProfit()
     
     ratioAsSeries = tl/gp
     
@@ -509,7 +653,8 @@ def getSolvencyRatios(balSht, incStmt, cfStmt, dates):
 # Main Program
 balSht, incStmt, cfStmt, stkQte, dates = \
     getFinancialStatementsFromYahoo("KO")
-
+financialData = FinancialData(balSht, incStmt, cfStmt, stkQte, dates)
+# table = getLiquidityRatios(balSht, incStmt, dates)
 table = getSolvencyRatios(balSht, incStmt, cfStmt, dates)
     
 print(table)
