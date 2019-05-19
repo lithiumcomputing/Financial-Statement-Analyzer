@@ -730,15 +730,14 @@ def calculateInventoryTurnoverRatio(balSht, incStmt, dates):
 def calculateAccountsReceivableTurnoverRatio(dates):
     global financialData
     sales = financialData.getSales()
-    totalAR = financialData.getNetReceivables()
+    totalAR = financialData.getNetReceivables().values
     avgAR = np.array([None]*len(totalAR))
     
     for index in range(len(totalAR)-1):
         avgAR[index+1] = 0.5*(totalAR[index]+totalAR[index+1])
     
     avgAR = pd.Series(avgAR, index=range(1,len(avgAR)+1))
-    print(avgAR)
-    
+
     ratioAsSeries = sales/avgAR
     
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
@@ -823,34 +822,62 @@ def getEfficiencyRatios(balSht, incStmt, cfStmt, dates):
         
     return table.round(ROUNDING_PRECISION).astype(object).transpose()
 
-# Main Program
-balSht, incStmt, cfStmt, stkQte, dates = \
-    getFinancialStatementsFromYahoo("KO")
-financialData = FinancialData(balSht, incStmt, cfStmt, stkQte, dates)
-# table = getLiquidityRatios(balSht, incStmt, dates)
-solvTable = getSolvencyRatios(balSht, incStmt, cfStmt, dates)
-effTable = getEfficiencyRatios(balSht, incStmt, cfStmt, dates)
+##
+# Outputs an HTML file with all financial ratios.
+#
+# @param balSht Balance Sheet DataFrame.
+# @param incStmt Income Statement DataFrame.
+# @param cfStmt Cash Flow Statement DataFrame.
+# @param stkQte Stock Quote DataFrame.
+# @param dates Dates numpy array relevant to the financial statements.
+def createMasterReport(balSht, incStmt, cfStmt, stkQte, dates):
+    liqTable = getLiquidityRatios(balSht, incStmt, dates)
+    solvTable = getSolvencyRatios(balSht, incStmt, cfStmt, dates)
+    effTable = getEfficiencyRatios(balSht, incStmt, cfStmt, dates)
+        
+    liqTableHTML = liqTable.to_html() # "liqRatios.html"
+    solvTableHTML = solvTable.to_html() # "solvRatios.html"
+    effTableHTML = effTable.to_html() # "effRatios.html"
     
-print(solvTable)
-solvTable.to_html("solvRatios.html")
-effTable.to_html("effRatios.html")
+    header = \
+    """
+    <html>
+    <head>
+    <title> Financial Ratios </title>
+    <body>
+    """
+    
+    liqTableHTML = \
+    """
+    <h1> <u> Liquidity Ratios </u> </h1>
+    """ + liqTableHTML
+    
+    solvTableHTML = \
+    """
+    <h1> <u> Solvency Ratios </u> </h1>
+    """ + solvTableHTML
+    
+    effTableHTML = \
+    """
+    <h1> <u> Efficiency Ratios </u> </h1>
+    """ + effTableHTML
+    
+    footer = \
+    """
+    </body>
+    </html>
+    """
+    
+    src = header + liqTableHTML + solvTableHTML + effTableHTML + footer
+    
+    myFile = open("FinancialRatios.html", "w")
+    myFile.write(src)
+    myFile.close()
+    
+# Main Program
 
-#src = table.to_html()
-
-#src = \
-#"""
-#<html>
-#<head>
-#<title> Liquidity Ratios </title>
-#<body>
-#
-#<h1> <u> Liquidity Ratios </u> </h1>
-#""" + src + \
-#"""
-#</body>
-#</html>
-#"""
-#
-#myFile = open("liqRatios.html", "w")
-#myFile.write(src)
-#myFile.close()
+if __name__ == "__main__":
+    balSht, incStmt, cfStmt, stkQte, dates = \
+        getFinancialStatementsFromYahoo("KO")
+    financialData = FinancialData(balSht, incStmt, cfStmt, stkQte, dates)
+    createMasterReport(balSht, incStmt, cfStmt, stkQte, dates)
