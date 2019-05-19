@@ -56,6 +56,7 @@ class FinancialData (object):
         self.__ie = pd.to_numeric(incStmt["Interest Expense"])
         self.__ebit = pd.to_numeric(\
                         incStmt["Earnings Before Interest and Taxes"])
+        self.__cor = pd.to_numeric(incStmt["Cost of Revenue"])
         
         # Cash Flow Statement Values
         self.__ocf = pd.to_numeric(cfStmt\
@@ -205,6 +206,23 @@ class FinancialData (object):
     # @return Value of earnings before interest and tax.
     def getEBIT(self):
         return self.__ebit
+    
+    ##
+    # Retrieves cost of revenue.
+    #
+    # @param self A reference to this object.
+    # @return Value of cost of revenue.
+    def getCostOfRevenue(self):
+        return self.__cor
+    
+    ##
+    # Alias function for getCostOfRevenue().
+    #
+    # @param self A reference to this object.
+    # @return Value of cost of revenue.
+    def getCOR(self):
+        return self.getCostOfRevenue()
+
 
 # Functions
 
@@ -645,6 +663,86 @@ def calculateTimesInterestEarned(incStmt, dates):
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Times Interest Earned"])
     
+# Efficiency Ratios
+    
+##
+# Calculates the asset turnover ratio.
+#
+# Formula: Sales / Avg Assets
+#
+# @param balSht Balance Sheet DataFrame.
+# @param incStmt Income Statement DataFrame.
+# @param dates Dates numpy array relevant to the financial statements.
+#
+# @return Asset Turnover Ratio table as a DataFrame object.
+def calculateAssetTurnoverRatio(balSht, incStmt, dates):
+    global financialData
+    sales = financialData.getSales()
+    totalAssets = financialData.getTotalAssets().values
+    avgAssets = np.array([None]*len(totalAssets))
+    
+    for index in range(len(totalAssets)-1):
+        avgAssets[index+1] = 0.5*(totalAssets[index]+totalAssets[index+1])
+    
+    avgAssets = pd.Series(avgAssets, index=range(1,len(avgAssets)+1))
+    
+    ratioAsSeries = sales/avgAssets
+    
+    return pd.DataFrame(ratioAsSeries.values, index=dates,\
+                        columns=["Asset Turnover Ratio"])
+    
+##
+# Calculates the inventory turnover ratio.
+#
+# Formula: COGS (or COR) / Avg Inventory
+#
+# @param balSht Balance Sheet DataFrame.
+# @param incStmt Income Statement DataFrame.
+# @param dates Dates numpy array relevant to the financial statements.
+#
+# @return Inventory Turnover Ratio table as a DataFrame object.
+def calculateInventoryTurnoverRatio(balSht, incStmt, dates):
+    global financialData
+    cor = financialData.getCOR()
+    totalInventory = financialData.getInventory().values
+    avgInventory = np.array([None]*len(totalInventory))
+    
+    for index in range(len(totalInventory)-1):
+        avgInventory[index+1] = 0.5*(totalInventory[index]+totalInventory[index+1])
+    
+    avgInventory = pd.Series(avgInventory, index=range(1,len(avgInventory)+1))
+    
+    ratioAsSeries = cor/avgInventory
+    
+    return pd.DataFrame(ratioAsSeries.values, index=dates,\
+                        columns=["Inventory Turnover Ratio"])
+  
+##
+# Calculates the accounts receivable turnover ratio.
+#
+# Formula: Sales / Avg A/R
+#
+# @param balSht Balance Sheet DataFrame.
+# @param incStmt Income Statement DataFrame.
+# @param dates Dates numpy array relevant to the financial statements.
+#
+# @return Accounts Receivable Turnover Ratio table as a DataFrame object.    
+def calculateAccountsReceivableTurnoverRatio(dates):
+    global financialData
+    sales = financialData.getSales()
+    totalAR = financialData.getNetReceivables()
+    avgAR = np.array([None]*len(totalAR))
+    
+    for index in range(len(totalAR)-1):
+        avgAR[index+1] = 0.5*(totalAR[index]+totalAR[index+1])
+    
+    avgAR = pd.Series(avgAR, index=range(1,len(avgAR)+1))
+    print(avgAR)
+    
+    ratioAsSeries = sales/avgAR
+    
+    return pd.DataFrame(ratioAsSeries.values, index=dates,\
+                        columns=["Accounts Receivable Turnover Ratio"])
 
 # Report-generating Functions
 
@@ -702,15 +800,40 @@ def getSolvencyRatios(balSht, incStmt, cfStmt, dates):
         
     return table.round(ROUNDING_PRECISION).astype(object).transpose()
 
+##
+# Retrieves a table of efficiency ratios.
+#
+# @param balSht Balance Sheet DataFrame.
+# @param incStmt Income Statement DataFrame.
+# @param cfStmt Cash Flow Statement DataFrame.
+# @param dates Dates numpy array relevant to the financial statements.
+#
+# @return A table of efficiency ratios as a DataFrame array.
+# represent dates.
+def getEfficiencyRatios(balSht, incStmt, cfStmt, dates):
+    listOfRatioTables = \
+    [calculateAssetTurnoverRatio(balSht, incStmt, dates),
+     calculateInventoryTurnoverRatio(balSht, incStmt, dates),
+     calculateAccountsReceivableTurnoverRatio(dates)]
+    
+    table = listOfRatioTables[0]
+
+    for index in range(1,len(listOfRatioTables)):
+        table = table.join(listOfRatioTables[index], how="left")
+        
+    return table.round(ROUNDING_PRECISION).astype(object).transpose()
+
 # Main Program
 balSht, incStmt, cfStmt, stkQte, dates = \
     getFinancialStatementsFromYahoo("KO")
 financialData = FinancialData(balSht, incStmt, cfStmt, stkQte, dates)
 # table = getLiquidityRatios(balSht, incStmt, dates)
-table = getSolvencyRatios(balSht, incStmt, cfStmt, dates)
+solvTable = getSolvencyRatios(balSht, incStmt, cfStmt, dates)
+effTable = getEfficiencyRatios(balSht, incStmt, cfStmt, dates)
     
-print(table)
-table.to_html("solvRatios.html")
+print(solvTable)
+solvTable.to_html("solvRatios.html")
+effTable.to_html("effRatios.html")
 
 #src = table.to_html()
 
