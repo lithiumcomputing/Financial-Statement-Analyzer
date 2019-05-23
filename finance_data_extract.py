@@ -344,12 +344,11 @@ def calculateWACC(balSht, incStmt, stkQte):
 #
 # Formula: Cash and Cash Equivalents / Current Liabilities
 #
-# @param balSht Balance Sheet DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Cash Ratio table as a DataFrame object.
 #
-def calculateCashRatio (balSht, dates):
+def calculateCashRatio (dates):
     global financialData
     cce = financialData.getCashAndCashEquivalents()
     currLia = financialData.getCurrentLiabilities()
@@ -366,11 +365,10 @@ def calculateCashRatio (balSht, dates):
 # Quick Assets include cash, cash equivalents, net receivables,
 # and marketable securities.
 #
-# @param balSht Balance Sheet DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Quick Ratio table as a DataFrame object.
-def calculateQuickRatio (balSht, dates):
+def calculateQuickRatio (dates):
     global financialData
     cce = financialData.getCashAndCashEquivalents()
     si = financialData.getShortTermInvestments()
@@ -392,7 +390,7 @@ def calculateQuickRatio (balSht, dates):
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Current Ratio table as a DataFrame object.
-def calculateCurrentRatio (balSht, dates):
+def calculateCurrentRatio (dates):
     global financialData
     currAssets = financialData.getCurrentAssets()
     currLia = financialData.getCurrentLiabilities()
@@ -406,11 +404,10 @@ def calculateCurrentRatio (balSht, dates):
 #
 # Formula: Current Assets - Current Liabilities
 #
-# @param balSht Balance Sheet DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Working Capital table as a DataFrame object.   
-def calculateWorkingCapital(balSht, dates):
+def calculateWorkingCapital(dates):
     global financialData
     currAssets = financialData.getCurrentAssets()
     currLia = financialData.getCurrentLiabilities()
@@ -426,15 +423,14 @@ def calculateWorkingCapital(balSht, dates):
 #
 # Formula: Cash and Cash Equivalents / Working Capital
 #
-# @param balSht Balance Sheet DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Cash To WC Ratio table as a DataFrame object.
 #    
-def calculateCashToWorkingCapitalRatio(balSht, dates):
+def calculateCashToWorkingCapitalRatio(dates):
     global financialData
     cce = financialData.getCashAndCashEquivalents()
-    wc = calculateWorkingCapital(balSht, dates)
+    wc = calculateWorkingCapital(dates)
     wc_series = wc["Working Capital (WC)"]
     wc_series.index = cce.index
     
@@ -448,14 +444,13 @@ def calculateCashToWorkingCapitalRatio(balSht, dates):
 #
 # Formula: Inventory / Working Capital
 #
-# @param balSht Balance Sheet DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Inventory To WC Ratio table as a DataFrame object.   
-def calculateInventoryToWorkingCapitalRatio(balSht, dates):
+def calculateInventoryToWorkingCapitalRatio(dates):
     global financialData
     inventory = financialData.getInventory()
-    wc = calculateWorkingCapital(balSht, dates)
+    wc = calculateWorkingCapital(dates)
     wc_series = wc["Working Capital (WC)"]
     wc_series.index = inventory.index
     
@@ -469,15 +464,13 @@ def calculateInventoryToWorkingCapitalRatio(balSht, dates):
 #
 # Formula: Sales / Working Capital
 #
-# @param balSht Balance Sheet DataFrame.
-# @param incStmt Income Statement DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Sales To WC Ratio table as a DataFrame object.   
-def salesToWorkingCapitalRatio(balSht, incStmt, dates):
+def salesToWorkingCapitalRatio(dates):
     global financialData
     sales = financialData.getSales()
-    wc = calculateWorkingCapital(balSht, dates)
+    wc = calculateWorkingCapital(dates)
     wc_series = wc["Working Capital (WC)"]
     wc_series.index = sales.index
     
@@ -491,12 +484,10 @@ def salesToWorkingCapitalRatio(balSht, incStmt, dates):
 #
 # Formula: Sales / Current Assets
 #
-# @param balSht Balance Sheet DataFrame.
-# @param incStmt Income Statement DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Sales To Current Assets table as a DataFrame object. 
-def salesToCurrentAssetsRatio(balSht, incStmt, dates):
+def salesToCurrentAssetsRatio(dates):
     global financialData
     sales = financialData.getSales()
     ca = financialData.getCurrentAssets()
@@ -513,11 +504,10 @@ def salesToCurrentAssetsRatio(balSht, incStmt, dates):
 #
 # Formula: Total Liabilities / Total Assets
 #
-# @param balSht Balance Sheet DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Debt Ratio table as a DataFrame object.
-def calculateDebtRatio(balSht, dates):
+def calculateDebtRatio(dates):
     global financialData
     tl = financialData.getTotalLiabilities()
     ta = financialData.getTotalAssets()
@@ -531,11 +521,10 @@ def calculateDebtRatio(balSht, dates):
 #
 # Formula: Total Equity / Total Assets
 #
-# @param balSht Balance Sheet DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Equity Ratio table as a DataFrame object.  
-def calculateEquityRatio(balSht, dates):
+def calculateEquityRatio(dates):
     global financialData
     te = financialData.getTotalStockholderEquity()
     ta = financialData.getTotalAssets()
@@ -550,11 +539,10 @@ def calculateEquityRatio(balSht, dates):
 #
 # Formula: Total Liabilities / Total Equity
 #
-# @param balSht Balance Sheet DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Debt to Equity Ratio table as a DataFrame object.  
-def calculateDebtToEquityRatio(balSht, dates):
+def calculateDebtToEquityRatio(dates):
     global financialData
     te = financialData.getTotalStockholderEquity()
     tl = financialData.getTotalLiabilities()
@@ -568,12 +556,10 @@ def calculateDebtToEquityRatio(balSht, dates):
 #
 # Formula: Total Liabilities / Gross Income
 #
-# @param balSht Balance Sheet DataFrame.
-# @param incStmt Income Statement DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Debt to Equity Ratio table as a DataFrame object.   
-def calculateDebtToIncomeRatio(balSht, incStmt, dates):
+def calculateDebtToIncomeRatio(dates):
     global financialData
     tl = financialData.getTotalLiabilities()
     gp = financialData.getGrossProfit()
@@ -590,12 +576,10 @@ def calculateDebtToIncomeRatio(balSht, incStmt, dates):
 # Debt Payments = Interest Expense + Loan Payments (not shown in Yahoo
 # Financial)
 #
-# @param balSht Balance Sheet DataFrame.
-# @param incStmt Income Statement DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Debt Service Coverage Ratio table as a DataFrame object.
-def calculateDebtServiceCoverageRatio(balSht, incStmt, dates):
+def calculateDebtServiceCoverageRatio(dates):
     global financialData
     noi = financialData.getOperatingIncomeOrLoss()
     ie = financialData.getInterestExpense()
@@ -609,12 +593,10 @@ def calculateDebtServiceCoverageRatio(balSht, incStmt, dates):
 #
 # Formula: Gross Operating Cash Flow / Total Liabilities
 #
-# @param balSht Balance Sheet DataFrame.
-# @param cfStmt Cash Flow Statement DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Cash Flow To Debt Ratio table as a DataFrame object.    
-def calculateCashFlowToDebtRatio(balSht, cfStmt, dates):
+def calculateCashFlowToDebtRatio(dates):
     global financialData
     ocf = financialData.getOperatingCashFlows()
     tl = financialData.getTotalLiabilities()
@@ -629,14 +611,13 @@ def calculateCashFlowToDebtRatio(balSht, cfStmt, dates):
 #
 # Formula: Working Captial / Total Liabilities
 #
-# @param balSht Balance Sheet DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Working Capital to Debt Ratio table as a DataFrame object.
-def calculateWCToDebtRatio(balSht, dates):
+def calculateWCToDebtRatio(dates):
     global financialData
     tl = financialData.getTotalLiabilities()
-    wc = calculateWorkingCapital(balSht, dates)
+    wc = calculateWorkingCapital(dates)
     wc_series = wc["Working Capital (WC)"]
     wc_series.index = tl.index
     
@@ -649,11 +630,10 @@ def calculateWCToDebtRatio(balSht, dates):
 #
 # Formula: EBIT / Interest Expense
 #
-# @param balSht Balance Sheet DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Working Capital to Debt Ratio table as a DataFrame object.   
-def calculateTimesInterestEarned(incStmt, dates):
+def calculateTimesInterestEarned(dates):
     global financialData
     ebit = financialData.getEBIT()
     ie = np.abs(financialData.getInterestExpense())
@@ -670,12 +650,10 @@ def calculateTimesInterestEarned(incStmt, dates):
 #
 # Formula: Sales / Avg Assets
 #
-# @param balSht Balance Sheet DataFrame.
-# @param incStmt Income Statement DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Asset Turnover Ratio table as a DataFrame object.
-def calculateAssetTurnoverRatio(balSht, incStmt, dates):
+def calculateAssetTurnoverRatio(dates):
     global financialData
     sales = financialData.getSales()
     totalAssets = financialData.getTotalAssets().values
@@ -696,12 +674,10 @@ def calculateAssetTurnoverRatio(balSht, incStmt, dates):
 #
 # Formula: COGS (or COR) / Avg Inventory
 #
-# @param balSht Balance Sheet DataFrame.
-# @param incStmt Income Statement DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Inventory Turnover Ratio table as a DataFrame object.
-def calculateInventoryTurnoverRatio(balSht, incStmt, dates):
+def calculateInventoryTurnoverRatio(dates):
     global financialData
     cor = financialData.getCOR()
     totalInventory = financialData.getInventory().values
@@ -722,8 +698,6 @@ def calculateInventoryTurnoverRatio(balSht, incStmt, dates):
 #
 # Formula: Sales / Avg A/R
 #
-# @param balSht Balance Sheet DataFrame.
-# @param incStmt Income Statement DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return Accounts Receivable Turnover Ratio table as a DataFrame object.    
@@ -748,21 +722,19 @@ def calculateAccountsReceivableTurnoverRatio(dates):
 ##
 # Retrieves a table of liquidity ratios.
 #
-# @param balSht Balance Sheet DataFrame.
-# @param incStmt Income Statement DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return A table of liquidity ratios as a DataFrame array.
 # Dimensions: Row labels represent ratios, column labels
 # represent dates.
-def getLiquidityRatios(balSht, incStmt, dates):
-    listOfRatioTables = [calculateCashRatio(balSht, dates),
-    calculateQuickRatio(balSht, dates),calculateCurrentRatio(balSht, dates),
-    calculateWorkingCapital(balSht, dates), 
-    calculateCashToWorkingCapitalRatio(balSht, dates),
-    calculateInventoryToWorkingCapitalRatio(balSht, dates),
-    salesToWorkingCapitalRatio(balSht, incStmt, dates),
-    salesToCurrentAssetsRatio(balSht, incStmt, dates)]
+def getLiquidityRatios(dates):
+    listOfRatioTables = [calculateCashRatio(dates),
+    calculateQuickRatio(dates),calculateCurrentRatio(dates),
+    calculateWorkingCapital(dates), 
+    calculateCashToWorkingCapitalRatio(dates),
+    calculateInventoryToWorkingCapitalRatio(dates),
+    salesToWorkingCapitalRatio(dates),
+    salesToCurrentAssetsRatio(dates)]
     
     table = listOfRatioTables[0]
 
@@ -781,16 +753,16 @@ def getLiquidityRatios(balSht, incStmt, dates):
 #
 # @return A table of solvency ratios as a DataFrame array.
 # represent dates.
-def getSolvencyRatios(balSht, incStmt, cfStmt, dates):
+def getSolvencyRatios(dates):
     listOfRatioTables = \
-    [calculateDebtRatio(balSht, dates),
-     calculateEquityRatio(balSht, dates),
-     calculateDebtToEquityRatio(balSht, dates),
-     calculateDebtToIncomeRatio(balSht, incStmt, dates),
-     calculateDebtServiceCoverageRatio(balSht, incStmt, dates),
-     calculateCashFlowToDebtRatio(balSht, cfStmt, dates),
-     calculateWCToDebtRatio(balSht, dates),
-     calculateTimesInterestEarned(incStmt, dates)]
+    [calculateDebtRatio(dates),
+     calculateEquityRatio(dates),
+     calculateDebtToEquityRatio(dates),
+     calculateDebtToIncomeRatio(dates),
+     calculateDebtServiceCoverageRatio(dates),
+     calculateCashFlowToDebtRatio(dates),
+     calculateWCToDebtRatio(dates),
+     calculateTimesInterestEarned(dates)]
     
     table = listOfRatioTables[0]
 
@@ -802,17 +774,14 @@ def getSolvencyRatios(balSht, incStmt, cfStmt, dates):
 ##
 # Retrieves a table of efficiency ratios.
 #
-# @param balSht Balance Sheet DataFrame.
-# @param incStmt Income Statement DataFrame.
-# @param cfStmt Cash Flow Statement DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
 #
 # @return A table of efficiency ratios as a DataFrame array.
 # represent dates.
-def getEfficiencyRatios(balSht, incStmt, cfStmt, dates):
+def getEfficiencyRatios(dates):
     listOfRatioTables = \
-    [calculateAssetTurnoverRatio(balSht, incStmt, dates),
-     calculateInventoryTurnoverRatio(balSht, incStmt, dates),
+    [calculateAssetTurnoverRatio(dates),
+     calculateInventoryTurnoverRatio(dates),
      calculateAccountsReceivableTurnoverRatio(dates)]
     
     table = listOfRatioTables[0]
@@ -825,15 +794,11 @@ def getEfficiencyRatios(balSht, incStmt, cfStmt, dates):
 ##
 # Outputs an HTML file with all financial ratios.
 #
-# @param balSht Balance Sheet DataFrame.
-# @param incStmt Income Statement DataFrame.
-# @param cfStmt Cash Flow Statement DataFrame.
-# @param stkQte Stock Quote DataFrame.
 # @param dates Dates numpy array relevant to the financial statements.
-def createMasterReport(balSht, incStmt, cfStmt, stkQte, dates):
-    liqTable = getLiquidityRatios(balSht, incStmt, dates)
-    solvTable = getSolvencyRatios(balSht, incStmt, cfStmt, dates)
-    effTable = getEfficiencyRatios(balSht, incStmt, cfStmt, dates)
+def createMasterReport(dates):
+    liqTable = getLiquidityRatios(dates)
+    solvTable = getSolvencyRatios(dates)
+    effTable = getEfficiencyRatios(dates)
         
     liqTableHTML = liqTable.to_html() # "liqRatios.html"
     solvTableHTML = solvTable.to_html() # "solvRatios.html"
@@ -880,4 +845,4 @@ if __name__ == "__main__":
     balSht, incStmt, cfStmt, stkQte, dates = \
         getFinancialStatementsFromYahoo("KO")
     financialData = FinancialData(balSht, incStmt, cfStmt, stkQte, dates)
-    createMasterReport(balSht, incStmt, cfStmt, stkQte, dates)
+    createMasterReport(dates)
