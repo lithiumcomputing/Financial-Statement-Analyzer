@@ -998,7 +998,8 @@ def createMasterReport(dates):
     
 # Main Program
 
-balSht, incStmt, cfStmt, stkQte, dates = \
-    getFinancialStatementsFromYahoo("KO")
-financialData = FinancialData(balSht, incStmt, cfStmt, stkQte, dates)
-createMasterReport(dates)
+if __name__ == "__main__":
+    balSht, incStmt, cfStmt, stkQte, dates = \
+        getFinancialStatementsFromYahoo("KO")
+    financialData = FinancialData(balSht, incStmt, cfStmt, stkQte, dates)
+    createMasterReport(dates)
