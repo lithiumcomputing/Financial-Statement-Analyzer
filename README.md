@@ -3,4 +3,6 @@ Extracts financial statements from a public company, outputs financial ratios in
 
 So far, the liquidity ratios, solvency, and efficiency ratios are completed. Will work on style next.
 
-Upcoming: Profitability Ratios, Valuation Ratios
+Ongoing: Profitability Ratios
+
+Upcoming: Valuation Ratios
