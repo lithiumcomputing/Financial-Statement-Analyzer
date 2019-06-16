@@ -751,6 +751,7 @@ def calculateROARatio(dates):
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Return on Assets"])
     
+    
 ##
 # Calculates the return on equity ratio.
 #
@@ -786,6 +787,60 @@ def calculateROSRatio(dates):
     
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Return on Sales"])
+
+##
+# Calculates the net profit margin ratio.
+#
+# Formula: Net Income / Sales
+#
+# @param dates Dates numpy array relevant to the financial statements.
+#
+# @return Net profit margin Ratio table as a DataFrame object.    
+def calculateNetProfitMarginRatio(dates):
+    global financialData
+    ni = financialData.getNetIncome()
+    sales = financialData.getSales()
+    
+    ratioAsSeries = ni/sales
+    
+    return pd.DataFrame(ratioAsSeries.values, index=dates,\
+                        columns=["Net Profit Margin Ratio"])
+    
+##
+# Calculates the gross profit margin ratio.
+#
+# Formula: Gross Profit / Sales
+#
+# @param dates Dates numpy array relevant to the financial statements.
+#
+# @return Gross profit margin Ratio table as a DataFrame object.    
+def calculateGrossProfitMarginRatio(dates):
+    global financialData
+    gp = financialData.getGrossProfit()
+    sales = financialData.getSales()
+    
+    ratioAsSeries = gp/sales
+    
+    return pd.DataFrame(ratioAsSeries.values, index=dates,\
+                        columns=["Gross Profit Margin Ratio"])
+
+##
+# Calculates the operating profit margin ratio.
+#
+# Formula: Operating Income / Sales
+#
+# @param dates Dates numpy array relevant to the financial statements.
+#
+# @return Operating profit margin Ratio table as a DataFrame object.    
+def calculateOperatingProfitMarginRatio(dates):
+    global financialData
+    op = financialData.getOperatingIncomeOrLoss()
+    sales = financialData.getSales()
+    
+    ratioAsSeries = op/sales
+    
+    return pd.DataFrame(ratioAsSeries.values, index=dates,\
+                        columns=["Operating Profit Margin Ratio"])
 
 # Report-generating Functions
 
@@ -872,7 +927,10 @@ def getProfitabilityRatios(dates):
     listOfRatioTables = \
     [calculateROARatio(dates),\
      calculateROERatio(dates),\
-     calculateROSRatio(dates)]
+     calculateROSRatio(dates),\
+     calculateNetProfitMarginRatio(dates),\
+     calculateGrossProfitMarginRatio(dates),\
+     calculateOperatingProfitMarginRatio(dates)]
     
     table = listOfRatioTables[0]
 
