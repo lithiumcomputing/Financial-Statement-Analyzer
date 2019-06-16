@@ -58,6 +58,11 @@ class FinancialData (object):
                         incStmt["Earnings Before Interest and Taxes"])
         self.__cor = pd.to_numeric(incStmt["Cost of Revenue"])
         
+        # Net Income Value
+        temp = incStmt["Net Income"]
+        temp.columns = ["NanCol", "Net Income"]
+        self.__ni = pd.to_numeric(temp["Net Income"])
+        
         # Cash Flow Statement Values
         self.__ocf = pd.to_numeric(cfStmt\
                        ["Total Cash Flow From Operating Activities"])
@@ -222,6 +227,9 @@ class FinancialData (object):
     # @return Value of cost of revenue.
     def getCOR(self):
         return self.getCostOfRevenue()
+    
+    def getNetIncome(self):
+        return self.__ni
 
 
 # Functions
@@ -660,7 +668,7 @@ def calculateAssetTurnoverRatio(dates):
     avgAssets = np.array([None]*len(totalAssets))
     
     for index in range(len(totalAssets)-1):
-        avgAssets[index+1] = 0.5*(totalAssets[index]+totalAssets[index+1])
+        avgAssets[index] = 0.5*(totalAssets[index]+totalAssets[index+1])
     
     avgAssets = pd.Series(avgAssets, index=range(1,len(avgAssets)+1))
     
@@ -684,7 +692,7 @@ def calculateInventoryTurnoverRatio(dates):
     avgInventory = np.array([None]*len(totalInventory))
     
     for index in range(len(totalInventory)-1):
-        avgInventory[index+1] = 0.5*(totalInventory[index]+totalInventory[index+1])
+        avgInventory[index] = 0.5*(totalInventory[index]+totalInventory[index+1])
     
     avgInventory = pd.Series(avgInventory, index=range(1,len(avgInventory)+1))
     
@@ -708,7 +716,7 @@ def calculateAccountsReceivableTurnoverRatio(dates):
     avgAR = np.array([None]*len(totalAR))
     
     for index in range(len(totalAR)-1):
-        avgAR[index+1] = 0.5*(totalAR[index]+totalAR[index+1])
+        avgAR[index] = 0.5*(totalAR[index]+totalAR[index+1])
     
     avgAR = pd.Series(avgAR, index=range(1,len(avgAR)+1))
 
@@ -716,6 +724,68 @@ def calculateAccountsReceivableTurnoverRatio(dates):
     
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Accounts Receivable Turnover Ratio"])
+    
+# Profitability Ratios    
+
+##
+# Calculates the return on assets ratio.
+#
+# Formula: Net Income / Avg Assets
+#
+# @param dates Dates numpy array relevant to the financial statements.
+#
+# @return ROA Ratio table as a DataFrame object.
+def calculateROARatio(dates):
+    global financialData
+    ni = financialData.getNetIncome()
+    totalAssets = financialData.getTotalAssets().values
+    avgAssets = np.array([None]*len(totalAssets))
+    
+    for index in range(len(totalAssets)-1):
+        avgAssets[index] = 0.5*(totalAssets[index]+totalAssets[index+1])
+    
+    avgAssets = pd.Series(avgAssets, index=range(1,len(avgAssets)+1))
+    
+    ratioAsSeries = ni/avgAssets
+    
+    return pd.DataFrame(ratioAsSeries.values, index=dates,\
+                        columns=["Return on Assets"])
+    
+##
+# Calculates the return on equity ratio.
+#
+# Formula: Net Income / Total Equity
+#
+# @param dates Dates numpy array relevant to the financial statements.
+#
+# @return ROE table as a DataFrame object.
+def calculateROERatio(dates):
+    global financialData
+    ni = financialData.getNetIncome()
+    totalSE = financialData.getTotalStockholderEquity()
+    
+    ratioAsSeries = ni / totalSE
+    
+    return pd.DataFrame(ratioAsSeries.values, index=dates,\
+                        columns=["Return on Equity"])
+ 
+##
+# Calculates the return on sales ratio.
+#
+# Formula: EBIT / Sales
+#
+# @param dates Dates numpy array relevant to the financial statements.
+#
+# @return ROS table as a DataFrame object.
+def calculateROSRatio(dates):
+    global financialData
+    ebit = financialData.getEBIT()
+    sales = financialData.getSales()
+    
+    ratioAsSeries = ebit / sales
+    
+    return pd.DataFrame(ratioAsSeries.values, index=dates,\
+                        columns=["Return on Sales"])
 
 # Report-generating Functions
 
@@ -792,6 +862,27 @@ def getEfficiencyRatios(dates):
     return table.round(ROUNDING_PRECISION).astype(object).transpose()
 
 ##
+# Retrieves a table of profitability ratios.
+#
+# @param dates Dates numpy array relevant to the financial statements.
+#
+# @return A table of profitability ratios as a DataFrame array.
+# represent dates.
+def getProfitabilityRatios(dates):
+    listOfRatioTables = \
+    [calculateROARatio(dates),\
+     calculateROERatio(dates),\
+     calculateROSRatio(dates)]
+    
+    table = listOfRatioTables[0]
+
+    for index in range(1,len(listOfRatioTables)):
+        table = table.join(listOfRatioTables[index], how="left")
+        
+    return table.round(ROUNDING_PRECISION).astype(object).transpose()
+
+
+##
 # Outputs an HTML file with all financial ratios.
 #
 # @param dates Dates numpy array relevant to the financial statements.
@@ -799,10 +890,12 @@ def createMasterReport(dates):
     liqTable = getLiquidityRatios(dates)
     solvTable = getSolvencyRatios(dates)
     effTable = getEfficiencyRatios(dates)
+    profitTable = getProfitabilityRatios(dates)
         
     liqTableHTML = liqTable.to_html() # "liqRatios.html"
     solvTableHTML = solvTable.to_html() # "solvRatios.html"
     effTableHTML = effTable.to_html() # "effRatios.html"
+    profitTableHTML = profitTable.to_html()
     
     header = \
     """
@@ -827,13 +920,19 @@ def createMasterReport(dates):
     <h1> <u> Efficiency Ratios </u> </h1>
     """ + effTableHTML
     
+    profitTableHTML = \
+    """
+    <h1> <u> Profitability Ratios </u> </h1>
+    """ + profitTableHTML
+    
     footer = \
     """
     </body>
     </html>
     """
     
-    src = header + liqTableHTML + solvTableHTML + effTableHTML + footer
+    src = header + liqTableHTML + solvTableHTML + effTableHTML + \
+          profitTableHTML + footer
     
     myFile = open("FinancialRatios.html", "w")
     myFile.write(src)
@@ -841,8 +940,7 @@ def createMasterReport(dates):
     
 # Main Program
 
-if __name__ == "__main__":
-    balSht, incStmt, cfStmt, stkQte, dates = \
-        getFinancialStatementsFromYahoo("KO")
-    financialData = FinancialData(balSht, incStmt, cfStmt, stkQte, dates)
-    createMasterReport(dates)
+balSht, incStmt, cfStmt, stkQte, dates = \
+    getFinancialStatementsFromYahoo("KO")
+financialData = FinancialData(balSht, incStmt, cfStmt, stkQte, dates)
+createMasterReport(dates)
