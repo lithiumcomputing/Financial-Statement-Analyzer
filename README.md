@@ -1,8 +1,6 @@
 # Financial-Statement-Analyzer
 Extracts financial statements from a public company, outputs financial ratios in a nice table.
 
-So far, the liquidity ratios, solvency, and efficiency ratios are completed. Will work on style next.
-
-Ongoing: Profitability Ratios
+So far, the liquidity ratios, solvency, efficiency, and profitability ratios are completed. 
 
 Upcoming: Valuation Ratios
