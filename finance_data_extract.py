@@ -21,13 +21,8 @@ import pandas as pd
 import numpy as np
 
 # Constants
-<<<<<<< HEAD
 
 ROUNDING_PRECISION = 3
-=======
-ROUNDING_PRECISION = 5
-the = "ther"
->>>>>>> 3116a2b096f785af2c6476f1b02dabfe3175f8de
 
 ##
 # Stores financial data from financial statements in one
