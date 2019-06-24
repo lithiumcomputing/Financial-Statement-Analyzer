@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['calculateaccountsreceivableturnoverratio',['calculateAccountsReceivableTurnoverRatio',['../namespacefinance__data__extract.html#a180358f06016a702d56e8b856776378b',1,'finance_data_extract']]],
+  ['calculateassetturnoverratio',['calculateAssetTurnoverRatio',['../namespacefinance__data__extract.html#a5d7839399b6b38ff54e58172d17e092f',1,'finance_data_extract']]],
+  ['calculatecashflowtodebtratio',['calculateCashFlowToDebtRatio',['../namespacefinance__data__extract.html#a06523466733e4d5df110887894ed69c1',1,'finance_data_extract']]],
+  ['calculatecashratio',['calculateCashRatio',['../namespacefinance__data__extract.html#ab0c7fe6809a6e4763624263a724133b5',1,'finance_data_extract']]],
+  ['calculatecashtoworkingcapitalratio',['calculateCashToWorkingCapitalRatio',['../namespacefinance__data__extract.html#a8582af24b42a0720a67843b809828c69',1,'finance_data_extract']]],
+  ['calculatecurrentratio',['calculateCurrentRatio',['../namespacefinance__data__extract.html#a1499790139ce80051aa32bd5217d5015',1,'finance_data_extract']]],
+  ['calculatedebtratio',['calculateDebtRatio',['../namespacefinance__data__extract.html#aa4be828a4416ee873624ace39ca31a72',1,'finance_data_extract']]],
+  ['calculatedebtservicecoverageratio',['calculateDebtServiceCoverageRatio',['../namespacefinance__data__extract.html#abf0bb7237b8da5a3d11898244bd127d5',1,'finance_data_extract']]],
+  ['calculatedebttoequityratio',['calculateDebtToEquityRatio',['../namespacefinance__data__extract.html#ad075c81481686a15e81548b7373c5a72',1,'finance_data_extract']]],
+  ['calculatedebttoincomeratio',['calculateDebtToIncomeRatio',['../namespacefinance__data__extract.html#a98f940c80e2be1af21e9dc82d8afef3a',1,'finance_data_extract']]],
+  ['calculateequityratio',['calculateEquityRatio',['../namespacefinance__data__extract.html#ad069a4dca55cdcc05d10f38ab2b6957d',1,'finance_data_extract']]],
+  ['calculategrossprofitmarginratio',['calculateGrossProfitMarginRatio',['../namespacefinance__data__extract.html#a4d9430200f93291fd68500b46e771741',1,'finance_data_extract']]],
+  ['calculateinventorytoworkingcapitalratio',['calculateInventoryToWorkingCapitalRatio',['../namespacefinance__data__extract.html#a88c9a89df9b2ca7db2ea9033a62a99a6',1,'finance_data_extract']]],
+  ['calculateinventoryturnoverratio',['calculateInventoryTurnoverRatio',['../namespacefinance__data__extract.html#ac72997943c2a76fd9c7501a8465b4a2e',1,'finance_data_extract']]],
+  ['calculatenetprofitmarginratio',['calculateNetProfitMarginRatio',['../namespacefinance__data__extract.html#a4f8affdb9c40c967a91b1608ef5df5f8',1,'finance_data_extract']]],
+  ['calculateoperatingprofitmarginratio',['calculateOperatingProfitMarginRatio',['../namespacefinance__data__extract.html#a7796732b5c210a146f25e6f8197d4f7b',1,'finance_data_extract']]],
+  ['calculatequickratio',['calculateQuickRatio',['../namespacefinance__data__extract.html#a604ed669dd71a7f8653aeae0a5571161',1,'finance_data_extract']]],
+  ['calculateroaratio',['calculateROARatio',['../namespacefinance__data__extract.html#a6ed88010c8f142fb79a26f2ea351e688',1,'finance_data_extract']]],
+  ['calculateroeratio',['calculateROERatio',['../namespacefinance__data__extract.html#a5a115e7e037c87dbc2c8462fafb081fe',1,'finance_data_extract']]],
+  ['calculaterosratio',['calculateROSRatio',['../namespacefinance__data__extract.html#af59514653ad613ebebdf0e891a6feb52',1,'finance_data_extract']]],
+  ['calculatetimesinterestearned',['calculateTimesInterestEarned',['../namespacefinance__data__extract.html#a14eb3d4bac69d64336ecc42f673e933e',1,'finance_data_extract']]],
+  ['calculatewacc',['calculateWACC',['../namespacefinance__data__extract.html#a6a844ec141100e77a9a7453dbb5db344',1,'finance_data_extract']]],
+  ['calculatewctodebtratio',['calculateWCToDebtRatio',['../namespacefinance__data__extract.html#a3e717b2144883dc822b2959b6fea1ea3',1,'finance_data_extract']]],
+  ['calculateworkingcapital',['calculateWorkingCapital',['../namespacefinance__data__extract.html#a778e7503389bcd258102bed39b2397b3',1,'finance_data_extract']]],
+  ['createmasterreport',['createMasterReport',['../namespacefinance__data__extract.html#a1b44d9b259c1d225f9e2bc46f0db92a7',1,'finance_data_extract']]]
+];
