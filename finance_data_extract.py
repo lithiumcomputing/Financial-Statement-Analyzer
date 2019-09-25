@@ -1,10 +1,3 @@
-##
-# @file finance_data_extract.py
-# @namespace finance_data_extract
-# @author jimli
-#
-# Created on Fri May 10 23:06:56 2019
-#
 # This program will analyze the financial statements and stock
 # quote of any publically traded company listed in Yahoo Finance
 # using financial ratio analysis.
@@ -24,20 +17,12 @@ import numpy as np
 
 ROUNDING_PRECISION = 3
 
-##
+#
 # Stores financial data from financial statements in one
 # convenient place.
 class FinancialData (object):
-    ##
     # Initializes the financial data class by collecting data
     # from specified financial statements.
-    #
-    # @param self A reference to this object.
-    # @param balSht Balance Sheet DataFrame.
-    # @param incStmt Income Statement DataFrame.
-    # @param cfStmt Cash Flow Statement DataFrame.
-    # @param stkQte Stock Quote DataFrame.
-    # @param dates Dates from the above financial statements.
     def __init__ (self, balSht, incStmt, cfStmt, stkQte, dates):
         # Balance Sheet Values
         self.__cce = pd.to_numeric(balSht["Cash And Cash Equivalents"])
@@ -68,164 +53,63 @@ class FinancialData (object):
         self.__ocf = pd.to_numeric(cfStmt\
                        ["Total Cash Flow From Operating Activities"])
 
-
-    ##
-    # Retrieves cash and cash equivalents value.
-    #
-    # @param self A reference to this object.
-    # @return Value of Cash and cash equivalents.
     def getCashAndCashEquivalents (self):
         return self.__cce
 
-    ##
-    # Retrieves the current liabilities value.
-    #
-    # @param self A reference to this object.
-    # @return Value of Current Liabilities.
     def getCurrentLiabilities (self):
         return self.__currLia
 
-    ##
-    # Retrieves the current liabilities value.
-    #
-    # @param self A reference to this object.
-    # @return Value of Current Assets.
     def getCurrentAssets (self):
         return self.__currAssets
 
-    ##
-    # Retrieves short term investments value.
-    #
-    # @param self A reference to this object.
-    # @return Value of short term investments.
     def getShortTermInvestments(self):
         return self.__shortTermInv
 
-    ##
-    # Retrieves net receivables value.
-    #
-    # @param self A reference to this object.
-    # @return Value of net receivables.
     def getNetReceivables(self):
         return self.__NR
 
-    ##
-    # Retrieves inventory value.
-    #
-    # @param self A reference to this object.
-    # @return Value of inventory.
     def getInventory(self):
         return self.__inventory
 
-    ##
-    # Retrieves total assets value.
-    #
-    # @param self A reference to this object.
-    # @return Value of total assets.
     def getTotalAssets(self):
         return self.__totalAssets
 
-    ##
-    # Retrieves total liabilities value.
-    #
-    # @param self A reference to this object.
-    # @return Value of total liabilities.
     def getTotalLiabilities(self):
         return self.__totalLia
 
-    ##
-    # Retrieves total stockholder's equity value.
-    #
-    # @param self A reference to this object.
-    # @return Value of total stockholder's equity.
     def getTotalStockholderEquity(self):
         return self.__totalSE
 
-    ##
-    # Alias function for getTotalStockholderEquity().
-    #
-    # @param self A reference to this object.
-    # @return Value of total shareholder's equity.
     def getTotalShareholderEquity(self):
         return self.getTotalStockholderEquity();
 
-    ##
-    # Retrieves sales amount.
-    #
-    # @param self A reference to this object.
-    # @return Value of sales.
     def getSales(self):
         return self.__sales
 
-    ##
-    # Alias function for getSales().
-    #
-    # @param self A reference to this object.
-    # @return Value of total shareholder's equity.
     def getTotalRevenue(self):
         return self.getSales();
 
-    ##
-    # Retrieves gross profit value.
-    #
-    # @param self A reference to this object.
-    # @return Value of gross profit.
     def getGrossProfit(self):
         return self.__gp
 
-    ##
-    # Retrieves operating income/loss value.
-    #
-    # @param self A reference to this object.
-    # @return Value of operating income/loss.
     def getOperatingIncomeOrLoss(self):
         return self.__noil
 
-    ##
-    # Alias function for getOperating.IncomeOrLoss()
-    #
-    # @param self A reference to this object.
-    # @return Value of operating income/loss.
     def getNetOperatingIncomeOrLoss(self):
         return self.getOperatingIncomeOrLoss()
 
-    ##
-    # Retrieves interest expense value.
-    #
-    # @param self A reference to this object.
-    # @return Value of interest expense. (Negative Value)
     def getInterestExpense(self):
         return self.__ie
 
-    ##
-    # Retrieves operating cash flows.
-    #
-    # @param self A reference to this object.
-    # @return Value of operating cash flows.
     def getOperatingCashFlows(self):
         return self.__ocf
 
-    ##
-    # Retrieves earnings before interest and tax.
-    #
-    # @param self A reference to this object.
-    # @return Value of earnings before interest and tax.
     def getEBIT(self):
         return self.__ebit
 
-    ##
-    # Retrieves cost of revenue.
-    #
-    # @param self A reference to this object.
-    # @return Value of cost of revenue.
     def getCostOfRevenue(self):
         return self.__cor
 
-    ##
-    # Alias function for getCostOfRevenue().
-    #
-    # @param self A reference to this object.
-    # @return Value of cost of revenue.
     def getCOR(self):
         return self.getCostOfRevenue()
 
@@ -235,15 +119,8 @@ class FinancialData (object):
 
 # Functions
 
-##
 # Retrieves financial statements and stock quote of a company
 # from Yahoo's website.
-#
-# @param ticker Ticker symbol for a public corporation.
-#
-# @return Balance Sheet, Income Statement, Cash Flow Statement, Stock Quote,
-# and Historical Dates of the First 3 Documents,
-# all as Pandas DataFlow Objects (except for Dates, which is a NumPy array.)
 def getFinancialStatementsFromYahoo (ticker):
     # URLs of various documents.
     url_cf_stmt = \
@@ -305,15 +182,9 @@ def getFinancialStatementsFromYahoo (ticker):
 
     # Return stock information.
     return balSht, incStmt, cfStmt, stkQte, dates
-##
+
 # Calculates the Weighted Average Cost of Capital (WACC) of the firm.
 # Parameters are retrieved from getFinancialStatementsFromYahoo().
-#
-# @param balSht Balance Sheet of the firm, as a Pandas DataFlow object.
-# @param incStmt Income Statement of the firm, as a Pandas DataFlow object.
-# @param stkQte Stock quote of the firm, as a Pandas DataFlow object.
-#
-# @return WACC of the firm, as a float.
 def calculateWACC(balSht, incStmt, stkQte):
     # Calculate the cost of debt for the most recent year.
     interestExpense = np.array(list(map(int,\
@@ -347,16 +218,6 @@ def calculateWACC(balSht, incStmt, stkQte):
     return WACC
 
 # Liquidity Ratios
-
-##
-# Calculates the cash ratio.
-#
-# Formula: Cash and Cash Equivalents / Current Liabilities
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Cash Ratio table as a DataFrame object.
-#
 def calculateCashRatio (dates):
     global financialData
     cce = financialData.getCashAndCashEquivalents()
@@ -367,16 +228,6 @@ def calculateCashRatio (dates):
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Cash Ratio"])
 
-##
-# Calculates the quick ratio.
-#
-# Formula: Quick Assets / Current Liabilities
-# Quick Assets include cash, cash equivalents, net receivables,
-# and marketable securities.
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Quick Ratio table as a DataFrame object.
 def calculateQuickRatio (dates):
     global financialData
     cce = financialData.getCashAndCashEquivalents()
@@ -390,15 +241,6 @@ def calculateQuickRatio (dates):
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Quick Ratio"])
 
-##
-# Calculates the current ratio.
-#
-# Formula: Current Assets / Current Liabilities
-#
-# @param balSht Balance Sheet DataFrame.
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Current Ratio table as a DataFrame object.
 def calculateCurrentRatio (dates):
     global financialData
     currAssets = financialData.getCurrentAssets()
@@ -408,14 +250,7 @@ def calculateCurrentRatio (dates):
 
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Current Ratio"])
-##
-# Calculates working capital.
-#
-# Formula: Current Assets - Current Liabilities
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Working Capital table as a DataFrame object.
+
 def calculateWorkingCapital(dates):
     global financialData
     currAssets = financialData.getCurrentAssets()
@@ -427,15 +262,7 @@ def calculateWorkingCapital(dates):
 
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Working Capital (WC)"])
-##
-# Calculates the cash to working capital ratio.
-#
-# Formula: Cash and Cash Equivalents / Working Capital
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Cash To WC Ratio table as a DataFrame object.
-#
+
 def calculateCashToWorkingCapitalRatio(dates):
     global financialData
     cce = financialData.getCashAndCashEquivalents()
@@ -448,14 +275,7 @@ def calculateCashToWorkingCapitalRatio(dates):
 
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Cash To WC Ratio"])
-##
-# Calculates the inventory to working capital ratio.
-#
-# Formula: Inventory / Working Capital
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Inventory To WC Ratio table as a DataFrame object.
+
 def calculateInventoryToWorkingCapitalRatio(dates):
     global financialData
     inventory = financialData.getInventory()
@@ -468,14 +288,7 @@ def calculateInventoryToWorkingCapitalRatio(dates):
 
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Inventory To WC Ratio"])
-##
-# Calculates the sales to working capital ratio.
-#
-# Formula: Sales / Working Capital
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Sales To WC Ratio table as a DataFrame object.
+
 def salesToWorkingCapitalRatio(dates):
     global financialData
     sales = financialData.getSales()
@@ -488,14 +301,7 @@ def salesToWorkingCapitalRatio(dates):
 
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Sales To WC Ratio"])
-##
-# Calculates the sales to current assets ratio.
-#
-# Formula: Sales / Current Assets
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Sales To Current Assets table as a DataFrame object.
+
 def salesToCurrentAssetsRatio(dates):
     global financialData
     sales = financialData.getSales()
@@ -508,14 +314,6 @@ def salesToCurrentAssetsRatio(dates):
 
 # Solvency Ratios
 
-##
-# Calculates the debt ratio.
-#
-# Formula: Total Liabilities / Total Assets
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Debt Ratio table as a DataFrame object.
 def calculateDebtRatio(dates):
     global financialData
     tl = financialData.getTotalLiabilities()
@@ -525,14 +323,7 @@ def calculateDebtRatio(dates):
 
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Debt Ratio"])
-##
-# Calculates the equity ratio.
-#
-# Formula: Total Equity / Total Assets
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Equity Ratio table as a DataFrame object.
+
 def calculateEquityRatio(dates):
     global financialData
     te = financialData.getTotalStockholderEquity()
@@ -543,14 +334,6 @@ def calculateEquityRatio(dates):
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Equity Ratio"])
 
-##
-# Calculates the debt to equity ratio.
-#
-# Formula: Total Liabilities / Total Equity
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Debt to Equity Ratio table as a DataFrame object.
 def calculateDebtToEquityRatio(dates):
     global financialData
     te = financialData.getTotalStockholderEquity()
@@ -560,14 +343,6 @@ def calculateDebtToEquityRatio(dates):
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Debt to Equity Ratio"])
 
-##
-# Calculates the debt to income ratio.
-#
-# Formula: Total Liabilities / Gross Income
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Debt to Equity Ratio table as a DataFrame object.
 def calculateDebtToIncomeRatio(dates):
     global financialData
     tl = financialData.getTotalLiabilities()
@@ -578,16 +353,6 @@ def calculateDebtToIncomeRatio(dates):
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Debt to Income Ratio"])
 
-##
-# Calculates the debt service coverage ratio.
-#
-# Formula: Gross Operating Income / Debt Payments
-# Debt Payments = Interest Expense + Loan Payments (not shown in Yahoo
-# Financial)
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Debt Service Coverage Ratio table as a DataFrame object.
 def calculateDebtServiceCoverageRatio(dates):
     global financialData
     noi = financialData.getOperatingIncomeOrLoss()
@@ -597,14 +362,7 @@ def calculateDebtServiceCoverageRatio(dates):
 
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Debt Service Coverage Ratio"])
-##
-# Calculates the cash flow to debt ratio.
-#
-# Formula: Gross Operating Cash Flow / Total Liabilities
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Cash Flow To Debt Ratio table as a DataFrame object.
+
 def calculateCashFlowToDebtRatio(dates):
     global financialData
     ocf = financialData.getOperatingCashFlows()
@@ -615,14 +373,6 @@ def calculateCashFlowToDebtRatio(dates):
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Cash Flow to Debt Ratio"])
 
-##
-# Calculates working capital to debt ratio.
-#
-# Formula: Working Captial / Total Liabilities
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Working Capital to Debt Ratio table as a DataFrame object.
 def calculateWCToDebtRatio(dates):
     global financialData
     tl = financialData.getTotalLiabilities()
@@ -634,14 +384,7 @@ def calculateWCToDebtRatio(dates):
 
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["WC to Debt Ratio"])
-##
-# Calculates times interest earned.
-#
-# Formula: EBIT / Interest Expense
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Working Capital to Debt Ratio table as a DataFrame object.
+
 def calculateTimesInterestEarned(dates):
     global financialData
     ebit = financialData.getEBIT()
@@ -654,14 +397,6 @@ def calculateTimesInterestEarned(dates):
 
 # Efficiency Ratios
 
-##
-# Calculates the asset turnover ratio.
-#
-# Formula: Sales / Avg Assets
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Asset Turnover Ratio table as a DataFrame object.
 def calculateAssetTurnoverRatio(dates):
     global financialData
     sales = financialData.getSales()
@@ -678,14 +413,6 @@ def calculateAssetTurnoverRatio(dates):
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Asset Turnover Ratio"])
 
-##
-# Calculates the inventory turnover ratio.
-#
-# Formula: COGS (or COR) / Avg Inventory
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Inventory Turnover Ratio table as a DataFrame object.
 def calculateInventoryTurnoverRatio(dates):
     global financialData
     cor = financialData.getCOR()
@@ -702,14 +429,6 @@ def calculateInventoryTurnoverRatio(dates):
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Inventory Turnover Ratio"])
 
-##
-# Calculates the accounts receivable turnover ratio.
-#
-# Formula: Sales / Avg A/R
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Accounts Receivable Turnover Ratio table as a DataFrame object.
 def calculateAccountsReceivableTurnoverRatio(dates):
     global financialData
     sales = financialData.getSales()
@@ -728,14 +447,6 @@ def calculateAccountsReceivableTurnoverRatio(dates):
 
 # Profitability Ratios
 
-##
-# Calculates the return on assets ratio.
-#
-# Formula: Net Income / Avg Assets
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return ROA Ratio table as a DataFrame object.
 def calculateROARatio(dates):
     global financialData
     ni = financialData.getNetIncome()
@@ -752,15 +463,6 @@ def calculateROARatio(dates):
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Return on Assets"])
 
-
-##
-# Calculates the return on equity ratio.
-#
-# Formula: Net Income / Total Equity
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return ROE table as a DataFrame object.
 def calculateROERatio(dates):
     global financialData
     ni = financialData.getNetIncome()
@@ -771,14 +473,6 @@ def calculateROERatio(dates):
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Return on Equity"])
 
-##
-# Calculates the return on sales ratio.
-#
-# Formula: EBIT / Sales
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return ROS table as a DataFrame object.
 def calculateROSRatio(dates):
     global financialData
     ebit = financialData.getEBIT()
@@ -789,14 +483,6 @@ def calculateROSRatio(dates):
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Return on Sales"])
 
-##
-# Calculates the net profit margin ratio.
-#
-# Formula: Net Income / Sales
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Net profit margin Ratio table as a DataFrame object.
 def calculateNetProfitMarginRatio(dates):
     global financialData
     ni = financialData.getNetIncome()
@@ -807,14 +493,6 @@ def calculateNetProfitMarginRatio(dates):
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Net Profit Margin Ratio"])
 
-##
-# Calculates the gross profit margin ratio.
-#
-# Formula: Gross Profit / Sales
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Gross profit margin Ratio table as a DataFrame object.
 def calculateGrossProfitMarginRatio(dates):
     global financialData
     gp = financialData.getGrossProfit()
@@ -825,14 +503,6 @@ def calculateGrossProfitMarginRatio(dates):
     return pd.DataFrame(ratioAsSeries.values, index=dates,\
                         columns=["Gross Profit Margin Ratio"])
 
-##
-# Calculates the operating profit margin ratio.
-#
-# Formula: Operating Income / Sales
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return Operating profit margin Ratio table as a DataFrame object.
 def calculateOperatingProfitMarginRatio(dates):
     global financialData
     op = financialData.getOperatingIncomeOrLoss()
@@ -844,15 +514,6 @@ def calculateOperatingProfitMarginRatio(dates):
                         columns=["Operating Profit Margin Ratio"])
 
 # Report-generating Functions
-
-##
-# Retrieves a table of liquidity ratios.
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return A table of liquidity ratios as a DataFrame array.
-# Dimensions: Row labels represent ratios, column labels
-# represent dates.
 def getLiquidityRatios(dates):
     listOfRatioTables = [calculateCashRatio(dates),
     calculateQuickRatio(dates),calculateCurrentRatio(dates),
@@ -869,16 +530,6 @@ def getLiquidityRatios(dates):
 
     return table.round(ROUNDING_PRECISION).astype(object).transpose()
 
-##
-# Retrieves a table of solvency ratios.
-#
-# @param balSht Balance Sheet DataFrame.
-# @param incStmt Income Statement DataFrame.
-# @param cfStmt Cash Flow Statement DataFrame.
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return A table of solvency ratios as a DataFrame array.
-# represent dates.
 def getSolvencyRatios(dates):
     listOfRatioTables = \
     [calculateDebtRatio(dates),
@@ -897,13 +548,6 @@ def getSolvencyRatios(dates):
 
     return table.round(ROUNDING_PRECISION).astype(object).transpose()
 
-##
-# Retrieves a table of efficiency ratios.
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return A table of efficiency ratios as a DataFrame array.
-# represent dates.
 def getEfficiencyRatios(dates):
     listOfRatioTables = \
     [calculateAssetTurnoverRatio(dates),
@@ -917,13 +561,6 @@ def getEfficiencyRatios(dates):
 
     return table.round(ROUNDING_PRECISION).astype(object).transpose()
 
-##
-# Retrieves a table of profitability ratios.
-#
-# @param dates Dates numpy array relevant to the financial statements.
-#
-# @return A table of profitability ratios as a DataFrame array.
-# represent dates.
 def getProfitabilityRatios(dates):
     listOfRatioTables = \
     [calculateROARatio(dates),\
@@ -940,11 +577,6 @@ def getProfitabilityRatios(dates):
 
     return table.round(ROUNDING_PRECISION).astype(object).transpose()
 
-
-##
-# Outputs an HTML file with all financial ratios.
-#
-# @param dates Dates numpy array relevant to the financial statements.
 def createMasterReport(dates):
     liqTable = getLiquidityRatios(dates)
     solvTable = getSolvencyRatios(dates)
@@ -991,14 +623,13 @@ def createMasterReport(dates):
     """
 
     src = header + liqTableHTML + solvTableHTML + effTableHTML + \
-          profitTableHTML + footer
+        profitTableHTML + footer
 
     myFile = open("FinancialRatios.html", "w")
     myFile.write(src)
     myFile.close()
 
 # Main Program
-
 if __name__ == "__main__":
     balSht, incStmt, cfStmt, stkQte, dates = \
         getFinancialStatementsFromYahoo("KO")
