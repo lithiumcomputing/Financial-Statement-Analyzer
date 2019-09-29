@@ -3,4 +3,5 @@ Extracts financial statements from a public company, outputs financial ratios in
 
 So far, the liquidity ratios, solvency, efficiency, and profitability ratios are completed. 
 
-Upcoming: Valuation Ratios
+NOTE: No longer works as Yahoo Finance changed its HTML table format from 
+tr and td tags to div tags.
